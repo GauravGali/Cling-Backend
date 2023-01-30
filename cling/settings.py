@@ -30,7 +30,7 @@ SECRET_KEY = 'django-insecure-=#h_-c$i-q(@90wlvz8qsh^+suug8m_&sb*uc2#52rb8%c1wum
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -91,7 +91,7 @@ DATABASES = {
         'NAME': 'postgres',
         'USER': 'postgres',
         'PASSWORD': os.getenv('SUPER_BASE_PASSWORD'),
-        'HOST': 'db.zagtzxhbuwncwfrzuima.supabase.co',
+        'HOST': 'db.vxlvhyaroodrojovmvys.supabase.co',
         'PORT': '5432',
     }
 }

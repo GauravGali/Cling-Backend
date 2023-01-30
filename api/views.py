@@ -13,6 +13,7 @@ import os
 
 load_dotenv()
 
+
 # Views
 @api_view(['GET'])
 def getRoutes(request):
@@ -50,32 +51,34 @@ def getUser(request, user_id):
     serializer = UserSerializer(users, many=False)
     return Response(serializer.data)
 
+
 def uploadToBlockChain(userEmail, avatarUrl, name):
-    # Support Network URL
+    # polygon mumbai testnet
     network = "mumbai"
 
-    # Instance of the SDK
+    # creating sdk instance
     sdk = ThirdwebSDK(network)
 
-    PRIVATE_KEY = os.getenv("THIRD_WEB_PRIVATE_KEY")
+    # authorizing using private key
+    PRIVATE_KEY = os.getenv('THIRD_WEB_PRIVATE_KEY')
+
     sdk = ThirdwebSDK.from_private_key(PRIVATE_KEY, network)
 
-    contract = sdk.get_nft_collection("0x89252Cd13EaF48B92EFa921C40eAaCE3ade0eEdB")
+    # establishing contract
+    contract = sdk.get_nft_collection("0x048Ab89691f7C3c74F38B595588808705c0a13F6")
 
-    # Metadata
+    # NFT metadata to store
     metadata = NFTMetadataInput.from_json({
         "name": name,
-        "description": userEmail[0:5]+avatarUrl[5:10]+name,
+        "description": (avatarUrl[0:5] + userEmail[0:5] + name[0:5]),
         "image": avatarUrl,
     })
 
-    # Minting As NFT To Address
+    # minting address
     tx = contract.mint_to("0xD426Dd09102cb7cc92568eD3f538185fc537B8A5", metadata)
     receipt = tx.receipt
     token_id = tx.id
     nft = tx.data()
-
-    return
 
 
 @api_view(['POST'])
@@ -91,7 +94,6 @@ def createUser(request):
             avatarUrl=userData['avatarUrl'],
             name=userData['userName']
         )
-        user.save()
 
         uploadToBlockChain(
             userEmail=userData['email'],
@@ -99,5 +101,4 @@ def createUser(request):
             name=userData['userName']
         )
 
-
-
+        user.save()
